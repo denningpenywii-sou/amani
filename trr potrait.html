@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMANI - You're Not Your Addiction</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; transition: all 0.25s ease; }
+body { margin:0; font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #e3f7f7, #ceeef3); display:flex; justify-content:center; align-items:center; height:100vh; overflow:hidden; padding: 10px; }
+
+/* Premium Portrait Mobile App Frame Structure */
+.app { width: 100%; max-width: 430px; height: 92vh; max-height: 880px; background: rgba(255,255,255,0.96); border-radius:32px; box-shadow:0 25px 55px rgba(15, 68, 87, 0.15); overflow:hidden; display:flex; flex-direction:column; position:relative; border: 4px solid #ffffff; }
+
+/* Visual Identity Header */
+.header { height: 70px; padding:12px 20px; text-align:center; background: linear-gradient(135deg, #00b4db, #0083b0); color:white; box-shadow: 0 4px 20px rgba(0, 131, 176, 0.25); z-index:5; display: flex; align-items: center; justify-content: flex-start; gap: 12px; }
+.header-logo { height: 36px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); }
+.header-text-group { display: flex; flex-direction: column; align-items: flex-start; }
+.title { font-size: 21px; font-weight: 700; letter-spacing: 0.5px; line-height: 1; }
+.subtitle { font-size: 10px; margin-top: 3px; opacity: 0.95; font-style: italic; letter-spacing: 0.2px; }
+
+/* Navigation Layer System optimized for Portrait scrolling */
+.content { flex:1; padding:20px; overflow-y:auto; position:absolute; width:100%; height:calc(100% - 70px); top:70px; left:100%; opacity:0; z-index:1; background: #f7fbfc; display: flex; flex-direction: column; }
+.content.active { left:0; opacity:1; z-index:2; }
+
+/* Portrait Column Stack Framework */
+.portrait-stack { display: flex; flex-direction: column; gap: 16px; flex: 1; }
+
+/* Premium Cards & Interaction Containers */
+.section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #5a738e; margin: 10px 0 6px 2px; letter-spacing: 0.8px; display: flex; align-items: center; gap: 6px; }
+.section-title:first-of-type { margin-top: 0px; }
+.app-card { background: white; border-radius: 20px; padding: 14px; box-shadow: 0 4px 18px rgba(146, 184, 197, 0.12); border: 1px solid rgba(230, 243, 245, 0.8); margin-bottom: 4px; }
+
+/* Button Matrices */
+.button { background: linear-gradient(135deg, #00b4db, #0083b0); color:white; font-weight:600; padding:14px 20px; border-radius:22px; margin:6px 0; width:100%; cursor:pointer; border:none; box-shadow:0 4px 12px rgba(0, 131, 176, 0.2); font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.button:hover { transform: translateY(-1px); box-shadow:0 6px 16px rgba(0, 131, 176, 0.25); }
+.button:active { transform: translateY(0); }
+.panic-btn { background: linear-gradient(135deg, #ff6b6b, #ee5253); box-shadow: 0 4px 12px rgba(238, 82, 83, 0.3); font-weight: 700; }
+.panic-btn:hover { box-shadow: 0 6px 16px rgba(238, 82, 83, 0.4); background: linear-gradient(135deg, #ff7676, #f05d5d); }
+.counsellor-btn { background: linear-gradient(135deg, #9b59b6, #8e44ad); box-shadow: 0 4px 12px rgba(142, 68, 173, 0.25); }
+.counsellor-btn:hover { box-shadow: 0 6px 16px rgba(142, 68, 173, 0.35); }
+
+/* Welcome Screen Intro Overlay */
+.splash { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:10; background: linear-gradient(135deg, #00b4db, #0083b0); color:white; animation: fadeOut 0.5s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards; animation-delay:2.5s; }
+@keyframes fadeOut { to { opacity:0; visibility:hidden; } }
+.splash-img { width: 95px; height: auto; margin-bottom: 15px; animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+.splash h1 { font-size:36px; font-weight:700; margin: 0; letter-spacing: 1px; }
+.splash p { font-size:14px; margin-top:6px; opacity:0.9; font-style: italic; }
+@keyframes popIn { 0%{transform: scale(0.4); opacity: 0;} 100%{transform: scale(1); opacity: 1;} }
+
+/* Interactive Loggers & Micro UI Elements */
+.log-row { display: flex; gap: 8px; margin-top: 5px; }
+.input-field { flex:1; padding:12px 16px; border-radius:18px; border:1px solid #dbe9ec; background: #fbfdfe; font-size: 13px; outline: none; }
+.input-field:focus { border-color: #00b4db; background: #fff; box-shadow: 0 0 8px rgba(0, 180, 219, 0.15); }
+.range-slider { width: 100%; accent-color: #00b4db; margin: 8px 0; }
+
+/* Enhanced Conversational AI Screen Layout Optimization */
+.chat-container { display: flex; flex-direction: column; height: 100%; width: 100%; }
+.chat-box { background: #ffffff; border-radius:24px; padding:14px; flex: 1; min-height: 240px; overflow-y:auto; box-shadow: inset 0 2px 8px rgba(0,0,0,0.02); border: 1px solid #edf4f5; margin-bottom:10px; display: flex; flex-direction: column; gap: 10px; }
+.chat-bubble { max-width: 85%; padding: 11px 15px; border-radius: 20px; font-size: 13px; line-height: 1.45; word-wrap: break-word; animation: messagePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards; transform-origin: top left; }
+.msg-user { background: linear-gradient(135deg, #e0f4f8, #ceeef3); color: #164e63; align-self: flex-end; border-bottom-right-radius: 4px; transform-origin: top right; }
+.msg-ai { background: #ffffff; color: #2c3e50; align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 3px 10px rgba(0,0,0,0.04); border: 1px solid #f0f6f7; }
+@keyframes messagePop { from { opacity: 0; transform: scale(0.9) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.quick-replies { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+.quick-replies button { background: #ffffff; border: 1px solid #addce6; color: #0083b0; font-size: 11.5px; font-weight: 500; padding: 7px 12px; border-radius: 14px; cursor: pointer; transition: all 0.2s ease; }
+.typing { font-size: 12px; font-style: italic; color:#7ec0cf; display: none; margin-left: 6px; font-weight: 500; margin-bottom: 6px; }
+
+/* Counsellor Workspace Layout Layout - Vertically Balanced */
+.telehealth-layout { display: flex; flex-direction: column; gap: 14px; flex: 1; }
+.mode-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 4px; }
+.mode-btn { border: 1px solid #e1bee7; background: white; color: #8e44ad; padding: 10px 4px; font-weight: 600; border-radius: 14px; cursor: pointer; font-size: 11.5px; text-align: center; }
+.mode-btn.active { background: linear-gradient(135deg, #9b59b6, #8e44ad); color: white; border: none; box-shadow: 0 4px 10px rgba(142, 68, 173, 0.2); }
+.session-container { width: 100%; height: 210px; background: #233242; border-radius: 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; position: relative; overflow: hidden; box-shadow: inset 0 0 30px rgba(0,0,0,0.4); }
+.video-stream { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; }
+.avatar-circle { width: 60px; height: 60px; border-radius: 50%; background: white; color: #8e44ad; font-size: 22px; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 6px; z-index: 2; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+.audio-pulse { width: 100px; height: 100px; border-radius: 50%; border: 2px solid rgba(155, 89, 182, 0.4); position: absolute; animation: audioWave 1.8s infinite linear; }
+@keyframes audioWave { 0% { transform: scale(0.6); opacity: 1; } 100% { transform: scale(1.4); opacity: 0; } }
+.status-indicator { z-index: 2; font-size: 12px; font-weight: 500; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+.counsellor-chat { width: 100%; height: 100%; background: #fcfaff; padding: 14px; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; }
+.c-msg { max-width: 85%; padding: 10px 14px; border-radius: 16px; font-size: 12.5px; line-height: 1.4; }
+.c-msg.them { background: #f1e7f5; color: #5c2575; align-self: flex-start; border-bottom-left-radius: 4px; }
+
+/* Friend Zone Feed Framework Grid - Unified List */
+.feed-container { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+.post-card { background: white; border-radius: 20px; padding: 14px; box-shadow: 0 3px 12px rgba(0,0,0,0.03); border-left: 4px solid #00b4db; transform: translateY(10px); opacity: 0; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; }
+.post-card.visible { transform: translateY(0); opacity: 1; }
+.post-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+.peer-name { font-weight: 700; font-size: 13px; color: #2c3e50; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.addiction-tag { font-size: 8.5px; padding: 2px 6px; border-radius: 6px; font-weight: 600; text-transform: uppercase; }
+.tag-alcohol { background: #ffe0b2; color: #e65100; }
+.tag-nicotine { background: #d1c4e9; color: #4527a0; }
+.tag-gambling { background: #c8e6c9; color: #1b5e20; }
+.streak-badge { font-size: 10.5px; background: rgba(0, 180, 219, 0.08); color: #0083b0; padding: 2px 6px; border-radius: 6px; font-weight: 600; white-space: nowrap; }
+.post-body { font-size: 12px; color: #546e7a; line-height: 1.45; font-style: italic; background: #f8fcfd; padding: 8px 12px; border-radius: 12px; margin-bottom: 2px; }
+.heart-btn { background: none; border: none; font-size: 11.5px; color: #ff6b6b; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: 600; padding: 0; width: fit-content; }
+
+/* Interactive Progress Suite Metrics */
+.progress-fill { height:100%; background: linear-gradient(90deg, #00b4db, #0083b0); width:0%; transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+.quote-text { font-style: italic; color: #2c3e50; font-size: 13px; line-height: 1.45; margin: 0; padding-left: 10px; border-left: 3px solid #00b4db; }
+.reminder-text { color: #4f707a; font-size: 12.5px; margin: 0; display: flex; align-items: center; gap: 8px; }
+
+/* Dynamic Portrait Panic Layout Stack */
+.panic-screen { text-align:center; background:#fffbfb; padding-top:10px; height:100%; }
+.panic-layout { display: flex; flex-direction: column; gap: 14px; text-align: left; margin-top: 10px; }
+.breath-container { position: relative; margin: 12px auto; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; }
+.breath-circle { width:95px; height:95px; border-radius:50%; background: linear-gradient(135deg, #00c6ff, #0072ff); position: absolute; box-shadow:0 0 30px rgba(0, 198, 255, 0.45); animation: breathe 4s infinite ease-in-out; }
+@keyframes breathe { 0% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.35); opacity: 1; } 100% { transform: scale(1); opacity: 0.7; } }
+.breath-label { z-index: 3; color: white; font-weight: 700; font-size: 13.5px; letter-spacing: 0.5px; text-shadow: 0 1px 4px rgba(0,0,0,0.4); }
+.partner-status-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 2px; border-bottom: 1px solid #fdf4f4; font-size: 12.5px; }
+.status-indicator-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.dot-green { background-color: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
+.dot-blue { background-color: #3498db; box-shadow: 0 0 8px #3498db; animation: pulseBlue 1.2s infinite alternate; }
+
+/* Global Notifications & Banner Popups */
+.motivation-popup { position:absolute; top:85px; left:50%; transform:translateX(-50%); background:#00b4db; color:white; padding:10px 16px; border-radius:20px; box-shadow:0 6px 20px rgba(0,0,0,0.15); opacity:0; animation: popupAnim 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards; z-index:15; font-size:11.5px; font-weight:600; letter-spacing: 0.3px; white-space: nowrap; }
+@keyframes popupAnim { 0%{opacity:0; transform:translate(-50%, -15px);} 100%{opacity:1; transform:translate(-50%,0);} }
+.highlight { animation: subtlePulse 1.4s infinite alternate; }
+@keyframes subtlePulse { 0% { transform: scale(1); } 100% { transform: scale(1.02); } }
+</style>
+</head>
+<body>
+
+<div class="app">
+<div class="splash">
+<img src="novatalks.png" class="splash-img" alt="AMANI Logo">
+<h1>AMANI</h1>
+<p>You're Not Your Addiction</p>
+</div>
+
+<div class="header">
+<img src="novatalks.png" class="header-logo" alt="AMANI Logo">
+<div class="header-text-group">
+<div class="title">AMANI</div>
+<div class="subtitle">You're Not Your Addiction</div>
+</div>
+</div>
+
+<div class="content active" id="onboarding">
+<div style="text-align: center; margin-top: 20px; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+<img src="novatalks.png" style="width:100px; height:auto; margin-bottom: 16px; filter: drop-shadow(0 4px 10px rgba(0,131,176,0.15));" alt="AMANI">
+<h3 style="color:#2c3e50; font-size: 22px; margin-bottom: 8px;">Your Private Recovery Sanctuary</h3>
+<p style="color:#607d8b; font-size: 14px; padding: 0 15px; max-width: 100%; margin-bottom: 24px; line-height: 1.5;">An interactive digital companion built to guide you through urges, monitor progress, and connect you to expert care seamlessly.</p>
+<button class="button" style="max-width: 260px;" onclick="goHome()">Enter Sanctuary</button>
+</div>
+</div>
+
+<div class="content" id="home">
+<div class="portrait-stack">
+    <div>
+        <div class="section-title">Core Assistants</div>
+        <button class="button highlight" onclick="openChat()">💬 Talk to AMANI</button>
+        <button class="button counsellor-btn highlight" onclick="talkToCounsellor()">👤 Talk to a Counsellor</button>
+    </div>
+
+    <div>
+        <div class="section-title">Urge Tracker Log</div>
+        <div class="app-card">
+        <label style="font-size:12px; font-weight:600; color:#4a5568;" id="rangeVal">Current Urge Intensity: 5/10</label>
+        <input type="range" min="1" max="10" value="5" class="range-slider" id="urgeSlider" oninput="document.getElementById('rangeVal').innerText='Current Urge Intensity: ' + this.value + '/10'">
+        <div class="log-row">
+        <input type="text" class="input-field" id="triggerInput" placeholder="Describe environmental trigger...">
+        <button class="button" style="margin:0; width:auto; padding:10px 14px; border-radius:16px; font-size:13px;" onclick="logUrgeMetric()">Submit</button>
+        </div>
+        </div>
+    </div>
+    
+    <div>
+        <div class="section-title">Daily Summary</div>
+        <div class="app-card" style="padding: 12px 14px; margin-bottom: 8px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span style="font-size:11.5px; font-weight:700; color:#475569;">Daily Quote</span><span style="font-size:9.5px; background:#e0f4f8; color:#0083b0; padding:2px 6px; border-radius:6px; font-weight:600;">Inspire</span></div>
+        <p class="quote-text" id="dashboardQuote">"The journey of a thousand miles begins with a single step."</p>
+        </div>
+
+        <div class="app-card" style="padding: 12px 14px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span style="font-size:11.5px; font-weight:700; color:#475569;">Action Item</span><span style="font-size:9.5px; background:#f0fdf4; color:#16a34a; padding:2px 6px; border-radius:6px; font-weight:600;">Reminder</span></div>
+        <p class="reminder-text" id="dashboardReminder">🔔 Take a moment to breathe deeply today.</p>
+        </div>
+    </div>
+
+    <div>
+        <div class="section-title">Social & Progression Analytics</div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom: 8px;">
+        <button class="button" style="margin:0; background:#ffffff; color:#2c3e50; border:1px solid #dbe9ec; box-shadow:none; padding:12px 10px;" onclick="openProgress()">📊 My Progress</button>
+        <button class="button" style="margin:0; background:#ffffff; color:#2c3e50; border:1px solid #dbe9ec; box-shadow:none; padding:12px 10px;" onclick="openFriendZone()">🤝 Friend Zone</button>
+        </div>
+
+        <button class="button panic-btn highlight" onclick="activatePanic()">🆘 Panic Button</button>
+    </div>
+</div>
+</div>
+
+<div class="content" id="chat">
+<div class="chat-container">
+<div class="chat-box" id="chatBox">
+<div class="chat-bubble msg-ai">Hello! I am AMANI, your intuitive recovery partner. How are your energy levels or environments treating you today?</div>
+</div>
+<div class="typing" id="typingIndicator">AMANI is generating reflections...</div>
+<div class="quick-replies">
+<button onclick="quickReply('I just overcame a craving!')">Overcame a craving 🎉</button>
+<button onclick="quickReply('I want to share my story')">Share my story 📖</button>
+<button onclick="quickReply('I completed a goal today')">Completed a goal 🏆</button>
+</div>
+<div class="input-row" style="margin-bottom: 8px; display: flex; gap: 6px;">
+<input type="text" class="input-field" id="userInput" placeholder="Reflect or list current triggers..." />
+<button class="button" style="margin:0; width:auto; padding:12px 18px; border-radius:18px;" onclick="sendMessage()">Send</button>
+</div>
+<button class="button" style="background:#edf4f5; color:#4a5b60; box-shadow:none; max-width: 180px; align-self: center; padding:10px 16px;" onclick="goHome()">Back to Main Hub</button>
+</div>
+</div>
+
+<div class="content" id="counsellorZone">
+<h3 style="margin-top: 0px; margin-bottom:12px; color:#2c3e50; font-size:18px;">Professional Support</h3>
+<div class="telehealth-layout">
+    <div>
+        <div class="mode-selector">
+        <button class="mode-btn active" id="btn-video" onclick="setCounsellorMode('video')">📹 Video</button>
+        <button class="mode-btn" id="btn-audio" onclick="setCounsellorMode('audio')">📞 Audio</button>
+        <button class="mode-btn" id="btn-text" onclick="setCounsellorMode('text')">💬 Text</button>
+        </div>
+        <div class="session-container" id="sessionScreen"></div>
+    </div>
+    <div style="display: flex; flex-direction: column; justify-content: center; background: white; padding: 16px; border-radius: 24px; box-shadow: 0 4px 18px rgba(146, 184, 197, 0.12); border: 1px solid rgba(230, 243, 245, 0.8);">
+        <p style="font-size:12.5px; color:#607d8b; text-align:center; margin-top:0; margin-bottom:14px; line-height: 1.45;">Licensed specialist networks are assigned dynamically to monitor profiles.</p>
+        <button class="button counsellor-btn" style="margin:0 0 10px 0;" onclick="showMotivation('Establishing safe workspace link...')">Initialize Live Stream</button>
+        <button class="button" style="background:#edf4f5; color:#4a5b60; box-shadow:none; margin:0;" onclick="goHome()">Back</button>
+    </div>
+</div>
+</div>
+
+<div class="content" id="friendZone">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; gap:8px;">
+    <div>
+        <h3 style="margin:0; color:#2c3e50; font-size:18px;">Community Feed</h3>
+        <p style="font-size:11.5px; color:#546e7a; margin: 4px 0 0 0; line-height:1.3;">Encourage anonymous community members processing recovery paths.</p>
+    </div>
+    <button class="button" style="margin:0; background:#edf4f5; color:#4a5b60; box-shadow:none; width: auto; padding: 8px 14px; font-size:12.5px; border-radius:14px;" onclick="goHome()">Back</button>
+</div>
+<div class="feed-container" id="feedContainer"></div>
+</div>
+
+<div class="content" id="progress">
+<h3 style="margin-top:0px; margin-bottom:12px; color:#2c3e50; font-size:18px;">Your Recovery Progress</h3>
+<div class="portrait-stack">
+    <div>
+        <div class="section-title">Daily Reflections</div>
+        <div class="app-card" style="background: linear-gradient(135deg, #ffffff, #f0fbfc); border-left: 4px solid #00b4db; margin-bottom: 10px;">
+        <p style="font-size: 10px; text-transform: uppercase; font-weight: 700; color: #0083b0; margin: 0 0 4px 0;">Today's Affirmation</p>
+        <p class="quote-text" id="progressQuote" style="font-size:12.5px; margin:0;">"Small steps everyday lead to massive internal milestones."</p>
+        </div>
+
+        <div class="app-card" style="background: linear-gradient(135deg, #ffffff, #f6fdf8); border-left: 4px solid #2ecc71;">
+        <p style="font-size: 10px; text-transform: uppercase; font-weight: 700; color: #27ae60; margin: 0 0 4px 0;">Health Reminder</p>
+        <p class="reminder-text" id="progressReminder" style="font-size:12.5px; margin:0;">🌱 Notice physical symptoms fading as your clean streak lengthens.</p>
+        </div>
+    </div>
+    
+    <div>
+        <div class="section-title">Telemetry Trackers</div>
+        <div class="progress-card app-card" style="margin-bottom:8px;"><p style="font-size:11.5px; font-weight:600; margin:0 0 6px 0; color:#475569;">7-Day Cleansing Streak</p><div style="height:8px; border-radius:10px; background:#edf4f5; overflow:hidden;"><div class="progress-fill" style="width:75%"></div></div></div>
+        <div class="progress-card app-card" style="margin-bottom:8px;"><p style="font-size:11.5px; font-weight:600; margin:0 0 6px 0; color:#475569;">Emotional Regulation Baseline</p><div style="height:8px; border-radius:10px; background:#edf4f5; overflow:hidden;"><div class="progress-fill" style="width:62%"></div></div></div>
+        <div class="progress-card app-card" style="margin-bottom:12px;"><p style="font-size:11.5px; font-weight:600; margin:0 0 6px 0; color:#475569;">Socio-Community Index</p><div style="height:8px; border-radius:10px; background:#edf4f5; overflow:hidden;"><div class="progress-fill" style="width:50%"></div></div></div>
+
+        <button class="button" style="background:#edf4f5; color:#4a5b60; box-shadow:none; padding:12px 20px;" onclick="goHome()">Back Hub</button>
+    </div>
+</div>
+</div>
+
+<div class="content panic-screen" id="panic">
+<h3 style="color:#e74c3c; margin: 0 0 4px 0; font-size:20px;">Panic Mode Activated</h3>
+<p style="font-size:11.5px; color:#7f8c8d; margin-top:0; padding:0 5px;">Your community support systems are activating to steady your path.</p>
+
+<div class="panic-layout">
+    <div>
+        <div class="app-card" style="padding:14px; background:#fff5f5; border:1px solid #fecdd3; display: flex; flex-direction: column;">
+            <div style="font-size:12.5px; font-weight:700; color:#b91c1c; margin-bottom:6px;" id="partnerTriageHeader">SOS: Signaling Partners...</div>
+            <div id="partnerStatusList" style="margin-bottom: 8px;">
+            <div class="partner-status-row"><span>Alex M. (Sponsor)</span><span style="display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600; color:#3498db;" id="status-alex">Notifying... <span class="status-indicator-dot dot-blue"></span></span></div>
+            <div class="partner-status-row"><span>Sophia R. (Peer)</span><span style="display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600; color:#3498db;" id="status-sophia">Notifying... <span class="status-indicator-dot dot-blue"></span></span></div>
+            <div class="partner-status-row"><span>Jordan K. (Account)</span><span style="display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600; color:#7f8c8d;" id="status-jordan">Queued <span class="status-indicator-dot" style="background:#babcbe;"></span></span></div>
+            </div>
+            <button class="button" style="background:#edf4f5; color:#4a5b60; box-shadow:none; margin:6px 0 0 0; padding:10px 14px; font-size:13px;" onclick="goHome()">Cancel Crisis Triage</button>
+        </div>
+    </div>
+    
+    <div>
+        <div class="app-card" style="padding:14px; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <p style="font-size: 13.5px; margin: 0 0 2px 0; font-weight:700; color:#0072ff;">Regulated Respiration Guide</p>
+        <p style="font-size: 11px; color:#64748b; margin: 0 0 4px 0; line-height: 1.3;">Inhale as the circle grows. Exhale as it shrinks.</p>
+        
+        <div class="breath-container">
+        <div class="breath-circle" id="bCircle"></div>
+        <div class="breath-label" id="bLabel">Inhale</div>
+        </div>
+        
+        <p style="font-size: 11.5px; color: #2ecc71; font-weight: 600; margin: 4px 0 0 0;">✨ You are safe right now.</p>
+        </div>
+    </div>
+</div>
+</div>
+
+</div>
+
+<script>
+// Adaptive State Engine Routing Controller
+function hideAll(){['onboarding','home','chat','panic','progress','friendZone','counsellorZone'].forEach(id=>document.getElementById(id).classList.remove('active'))}
+function goHome(){hideAll();document.getElementById('home').classList.add('active');}
+function openChat(){hideAll();document.getElementById('chat').classList.add('active');}
+function talkToCounsellor(){hideAll();document.getElementById('counsellorZone').classList.add('active');setCounsellorMode('video');}
+
+// Daily Progression Content Arrays
+const localQuotes = [
+"The journey of a thousand miles begins with a single step.",
+"Your past does not define your capacity for transformation.",
+"Courage is leaning into discomfort one day at a time.",
+"Recovery is an active path of self-discovery, not compliance."
+];
+const localReminders = [
+"🔔 Take a moment to breathe deeply today.",
+"💧 Ensure you hydrate to purge lingering oxidative cellular stress.",
+"🌿 Check your posture and release tension held inside your shoulders.",
+"💬 Reach out to an accountability network peer before sunset."
+];
+
+function openProgress(){
+hideAll();
+document.getElementById('progress').classList.add('active');
+const randomIdx = Math.floor(Math.random() * localQuotes.length);
+document.getElementById('progressQuote').innerText = `"${localQuotes[randomIdx]}"`;
+document.getElementById('progressReminder').innerText = localReminders[randomIdx];
+document.getElementById('dashboardQuote').innerText = `"${localQuotes[randomIdx]}"`;
+document.getElementById('dashboardReminder').innerText = localReminders[randomIdx];
+
+setTimeout(() => {
+document.querySelectorAll('.progress-fill').forEach((bar, index) => {
+bar.style.width = ['75%', '62%', '50%'][index];
+});
+}, 50);
+}
+
+// Urge Submission Integration Logic
+function logUrgeMetric(){
+const slider = document.getElementById('urgeSlider');
+const trigger = document.getElementById('triggerInput');
+if(trigger.value.trim() === "") {
+showMotivation(`Logged Urge Level ${slider.value}/10`);
+} else {
+showMotivation(`Logged Urge: Level ${slider.value} (${trigger.value})`);
+trigger.value = "";
+}
+}
+
+// Multi-Step Multi-Response Simulated AI Thread Engine
+function sendMessage(){
+const input = document.getElementById('userInput');
+const chatBox = document.getElementById('chatBox');
+const typing = document.getElementById('typingIndicator');
+if(input.value.trim() === '') return;
+
+const userMsg = input.value;
+chatBox.innerHTML += `<div class='chat-bubble msg-user'>${userMsg}</div>`;
+input.value = '';
+chatBox.scrollTop = chatBox.scrollHeight;
+
+typing.style.display = 'block';
+setTimeout(() => {
+let aiReply = "I've carefully updated your analytical behavioral log. Tell me more about what triggered this specific sensation?";
+const msg = userMsg.toLowerCase();
+
+if(msg.includes("craving") || msg.includes("overcame")) {
+aiReply = "That shows remarkable neural re-patterning! Every time you override an urge, you weaken the addiction's neural network pathways. What helped you stay firm?";
+} else if(msg.includes("story") || msg.includes("share")) {
+aiReply = "Your narrative is incredibly valuable. Sharing structured timelines minimizes internal shame and patterns. Would you like this logged to your peer feed anonymized?";
+} else if(msg.includes("goal") || msg.includes("completed")) {
+aiReply = "Incredible milestone reached! Your reward receptors are beginning to re-align back to healthy normal baselines. Let's log this to your Progress Index!";
+} else if(msg.includes("stress") || msg.includes("struggling")) {
+aiReply = "I understand completely. Stress creates automatic survival paths that trick our urges. Let's do a 4-second breathing cycle or tap the SOS Panic Button.";
+}
+
+chatBox.innerHTML += `<div class='chat-bubble msg-ai'>${aiReply}</div>`;
+typing.style.display = 'none';
+chatBox.scrollTop = chatBox.scrollHeight;
+showMotivation('AI Reflected Progress Metrics!');
+}, 1100);
+}
+
+function quickReply(msg){
+document.getElementById('userInput').value = msg;
+sendMessage();
+}
+
+// Live Session Communication Interface Matrix Manager
+function setCounsellorMode(mode) {
+document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+document.getElementById('btn-' + mode).classList.add('active');
+const container = document.getElementById('sessionScreen');
+
+if(mode === 'video') {
+container.innerHTML = `<div class="video-stream" style="background: linear-gradient(45deg, #1e3c72, #2a5298);"><div style="text-align:center; z-index:2;"><div class="avatar-circle">Dr.J</div><div class="status-indicator">Secure Video Stream Active...</div></div></div>`;
+} else if(mode === 'audio') {
+container.innerHTML = `<div style="text-align:center; z-index:2;"><div class="audio-pulse"></div><div class="avatar-circle" style="background:#9b59b6; color:white;">🎙️</div><div class="status-indicator">Secure Voice Bridge Live</div></div>`;
+} else if(mode === 'text') {
+container.innerHTML = `<div class="counsellor-chat"><div class="c-msg them">Hello, I am Dr. Jenn. I have reviewed your baseline triggers. Tell me, how are you navigating your internal environment today?</div><div style="font-size:10px; color:#b0c4de; text-align:center;">End-to-End Encrypted Session</div></div>`;
+}
+}
+
+// Peer Profile Micro-Feed Generation Architecture
+function openFriendZone(){
+hideAll();
+document.getElementById('friendZone').classList.add('active');
+const feed = document.getElementById('feedContainer');
+const peerMockupData = [
+{name: "Alex M.", addiction: "Alcohol Recovery", tagClass: "tag-alcohol", streak: "45 Days", text: "Craving hit hard after work today. Instead of stopping by the usual spot, I pulled open AMANI and did the breathing exercise."},
+{name: "Sophia R.", addiction: "Nicotine Free", tagClass: "tag-nicotine", streak: "12 Days", text: "First full week without vaping. My lungs feel lighter and I'm finally recovering my sleep rhythm. We are bigger than our triggers!"},
+{name: "Jordan K.", addiction: "Gambling Focus", tagClass: "tag-gambling", streak: "90 Days", text: "Hit 3 full months today! Deleted all marketing apps. Reminded myself that financial freedom starts with self-control."}
+];
+
+feed.innerHTML = '';
+peerMockupData.forEach((peer, i) => {
+const card = document.createElement('div');
+card.className = `post-card`;
+card.innerHTML = `
+<div>
+    <div class="post-header">
+    <div class="peer-name">${peer.name} <span class="addiction-tag ${peer.tagClass}">${peer.addiction}</span></div>
+    <div class="streak-badge">${peer.streak}</div>
+    </div>
+    <div class="post-body">"${peer.text}"</div>
+</div>
+<button class="heart-btn" onclick="this.innerHTML='❤️ Support Shared!'; showMotivation('Sent peer encouragement!');">❤️ Support Peer</button>
+`;
+feed.appendChild(card);
+setTimeout(() => card.style.transition = 'all 0.4s ease', i*10);
+setTimeout(() => card.classList.add('visible'), i * 150);
+});
+}
+
+// Triage Accountability Escalation Simulation Loop Engine
+let panicInterval;
+function activatePanic(){
+hideAll();
+document.getElementById('panic').classList.add('active');
+
+document.getElementById('partnerTriageHeader').innerText = "SOS: Signaling Partners...";
+document.getElementById('status-alex').innerHTML = `Notifying... <span class="status-indicator-dot dot-blue"></span>`;
+document.getElementById('status-sophia').innerHTML = `Notifying... <span class="status-indicator-dot dot-blue"></span>`;
+document.getElementById('status-jordan').innerHTML = `Queued <span class="status-indicator-dot" style="background:#babcbe;"></span>`;
+
+setTimeout(() => {
+document.getElementById('status-alex').innerHTML = `Responded 🟢 <span class="status-indicator-dot dot-green"></span>`;
+showMotivation('Alex M. acknowledged alert!');
+}, 1800);
+
+setTimeout(() => {
+document.getElementById('status-sophia').innerHTML = `Responded 🟢 <span class="status-indicator-dot dot-green"></span>`;
+document.getElementById('status-jordan').innerHTML = `Notifying... <span class="status-indicator-dot dot-blue"></span>`;
+showMotivation('Sophia R. acknowledged alert!');
+}, 3500);
+
+setTimeout(() => {
+document.getElementById('status-jordan').innerHTML = `Responded 🟢 <span class="status-indicator-dot dot-green"></span>`;
+document.getElementById('partnerTriageHeader').innerText = "All Partners Active! 🛡️";
+showMotivation('Full protection loop established.');
+}, 5500);
+
+startBreathingLoop();
+}
+
+function startBreathingLoop() {
+const label = document.getElementById('bLabel');
+if(!label) return;
+
+clearInterval(panicInterval);
+let state = true;
+
+function step() {
+label.innerText = state ? "Inhale" : "Exhale";
+state = !state;
+}
+step();
+panicInterval = setInterval(step, 2000); 
+}
+
+function showMotivation(msg){
+const popup = document.createElement('div');
+popup.className = 'motivation-popup';
+popup.innerText = msg;
+document.querySelector('.app').appendChild(popup);
+setTimeout(() => popup.remove(), 2200);
+}
+
+// Automated Demo Cycle Layout Verification
+setTimeout(() => {
+openChat();
+setTimeout(() => {
+quickReply('I just overcame a craving!');
+setTimeout(() => {
+openProgress();
+setTimeout(() => {
+openFriendZone();
+setTimeout(() => {
+activatePanic();
+}, 4500);
+}, 3500);
+}, 3500);
+}, 2000);
+}, 3000);
+</script>
+</body>
+</html>
